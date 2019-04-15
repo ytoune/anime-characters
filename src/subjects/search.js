@@ -1,5 +1,5 @@
 import { ajax } from 'rxjs/ajax'
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, of } from 'rxjs'
 import {
 	filter,
 	switchMap,
@@ -39,11 +39,9 @@ export const search = query.pipe(
 			catchError(x => {
 				if (x && 400 <= x.status && x.status < 500) {
 					const t = x.xhr && x.xhr.statusText
-					return {
-						errors: ['string' === typeof t ? t : 'Not Found'],
-					}
+					return of({ errors: ['string' === typeof t ? t : 'Not Found'] })
 				}
-				return { errors: ['something happen.'] }
+				return of({ errors: ['something happen.'] })
 			}),
 			startWith(null),
 			tap(v => {
