@@ -2,7 +2,7 @@ import React from 'react'
 
 import { combine, appendPropsStream, compose } from '../utils'
 import { route } from '../subjects/route'
-import { search, query, pushquery, isLoading } from '../subjects/search'
+import { search, query, pushquery, isLoading, errors } from '../subjects/search'
 
 import {
 	TextField,
@@ -17,6 +17,7 @@ const handleQuery = e => pushquery(e.target.value)
 const withRoute = appendPropsStream(() => combine({ route }))
 const withQuery = appendPropsStream(() => combine({ query, handleQuery }))
 const withSearch = appendPropsStream(() => combine({ search, isLoading }))
+const withErrors = appendPropsStream(() => combine({ errors }))
 
 const Img = ({ childrenClassName: _, ...p }) => {
 	return <img style={{ maxHeight: '100px' }} {...p} />
@@ -27,10 +28,22 @@ const Link = ({ childrenClassName: _, ...props }) => (
 const getAnimeNames = item => {
 	return [].concat(item.anime, item.manga)
 }
-const IndexView = ({ route, search, query, handleQuery, isLoading }) => (
+const IndexView = ({
+	route,
+	search,
+	query,
+	handleQuery,
+	isLoading,
+	errors,
+}) => (
 	<div>
 		<TextField value={query} onChange={handleQuery} />
 		{isLoading ? <Typography>isLoading...</Typography> : null}
+		{errors && errors.length
+			? errors.map((error, i) => (
+					<Typography key={error + i}>{error}</Typography>
+			  ))
+			: null}
 		{'home' === route.name ? (
 			<Typography>input search name</Typography>
 		) : (
@@ -60,6 +73,7 @@ const Index = compose(
 	withRoute,
 	withQuery,
 	withSearch,
+	withErrors,
 )(IndexView)
 
 const NotFound = () => <div>not found</div>
