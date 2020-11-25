@@ -48,7 +48,8 @@ export const pushState = (
 	router.isActive(name, params)
 		? Promise.resolve(router.getState())
 		: new Promise((res, rej) =>
-				router.navigate(name, params, opts, (e, s) => (e ? rej(e) : res(s))),
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				router.navigate(name, params, opts, (e, s) => (e ? rej(e) : res(s!))),
 		  )
 
 router.start()
