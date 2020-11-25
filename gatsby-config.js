@@ -30,7 +30,7 @@ module.exports = {
 		// To learn more, visit: https://gatsby.app/offline
 		// 'gatsby-plugin-offline',
 		{
-			resolve: `@wapps/gatsby-plugin-material-ui`,
+			resolve: 'gatsby-plugin-material-ui',
 			options: {
 				// Add any options here
 				productionPrefix: 'c',
