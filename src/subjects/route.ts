@@ -6,16 +6,8 @@ import { shareReplay } from 'rxjs/operators'
 import type { Observable } from 'rxjs'
 import type { Route, State } from 'router5'
 
-import type {
-	Params,
-	NavigationOptions,
-	// DoneFn,
-	State as BState,
-} from 'router5/dist/types/base'
+import type { Params, NavigationOptions } from 'router5/dist/types/base'
 
-/**
- * @type {import("router5").Route[]}
- */
 const routes: Route[] = [
 	{ name: 'home', path: '/' },
 	{ name: 'home/search', path: '/q/*query' },
@@ -48,18 +40,11 @@ export default route
 
 route.subscribe(Boolean)
 
-/**
- * @typedef {import("router5/types/types/base").Params} Params
- * @typedef {import("router5/types/types/base").NavigationOptions} NavigationOptions
- * @typedef {import("router5/types/types/base").DoneFn} DoneFn
- * @typedef {import("router5/types/types/base").State} State
- */
-/** @type {(routeName: string, params?: Params, options?: NavigationOptions) => Promise<State>} */
 export const pushState = (
 	name: string,
 	params: Params = {},
 	opts: NavigationOptions = {},
-): Promise<BState> =>
+): Promise<State> =>
 	router.isActive(name, params)
 		? Promise.resolve(router.getState())
 		: new Promise((res, rej) =>

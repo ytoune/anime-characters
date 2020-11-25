@@ -3,22 +3,12 @@
 import type { Observable } from 'rxjs'
 import type { ObservableConfig, mapper, ComponentEnhancer } from 'recompose'
 
-/**
- * @template S
- * @typedef {import("rxjs").Observable<S>} Observable<S>
- */
 import { compose, mapPropsStreamWithConfig } from 'recompose'
 import { BehaviorSubject, combineLatest, of, isObservable, from } from 'rxjs'
 import { map, switchMap, shareReplay } from 'rxjs/operators'
 
 export { compose }
 
-/**
- * @type {<T extends {}>(obj: T) => Observable<{
-     [K in keyof T]: T[K] extends Observable<infer U>
-     ? U : T[K]
-   }>}
- */
 export const combine = <T extends Record<string, unknown>>(
 	dict: T,
 ): Observable<
@@ -39,10 +29,6 @@ export const combine = <T extends Record<string, unknown>>(
 	)
 }
 
-/**
- * @template T
- * @type {<T>(def: T) => [import("rxjs").BehaviorSubject<T>, (p: T) => void]}
- */
 export const createState = <T>(
 	def: T,
 ): [BehaviorSubject<T>, (p: T) => void] => {
@@ -50,13 +36,6 @@ export const createState = <T>(
 	return [sub, p => sub.next(p)]
 }
 
-/**
- * @template T, K
- * @type {<T, K>({timeout}?: {timeout?: number}) => {
-     remove: (key: K) => void
-     select: (key: K, get: () => Observable<T>) => Observable<T>
-   }}
- */
 export const createCache = <T, K>({ timeout }: { timeout?: number } = {}): {
 	remove: (key: K) => void
 	select: (key: K, get: () => Observable<T>) => Observable<T>
@@ -86,7 +65,6 @@ export const createCache = <T, K>({ timeout }: { timeout?: number } = {}): {
 }
 
 // https://github.com/ReactiveX/rxjs/issues/4415
-/** @type {<P, S>(r: (a: P, ...b: *[]) => S) => (a: P) => S} */
 const fix: <P, S>(r: (a: P, ...b: unknown[]) => S) => (a: P) => S = (() => {
 	const make = k => {
 		const s1 = ('function' === typeof Symbol && Symbol[k]) || '@@' + k
@@ -111,21 +89,16 @@ const fix: <P, S>(r: (a: P, ...b: unknown[]) => S) => (a: P) => S = (() => {
 		return fn(r)
 	}
 })()
-/** @type {import("recompose").ObservableConfig} */
+
 const config: ObservableConfig = {
 	fromESObservable: fix(from),
 	toESObservable: fix(stream => stream),
 }
 export const mapPropsStream = mapPropsStreamWithConfig(config)
 
-/**
- * @template T, S
- * @param {import("recompose").mapper<Observable<T>, Observable<S>>} fn
- * @returns {import("recompose").ComponentEnhancer<T & S, T>}
- */
 export const appendPropsStream = <T, S>(
 	fn: mapper<Observable<T>, Observable<S>>,
 ): ComponentEnhancer<T & S, T> =>
 	mapPropsStream((/** @param {Observable<T>} p */ p: Observable<T>) =>
-		combineLatest([p, fn(p), (p, o) => ({ ...p, ...o })]),
+		map(([p, o]) => ({ ...p, ...o }))(combineLatest([p, fn(p)])),
 	)

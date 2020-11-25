@@ -1,5 +1,5 @@
 import { ajax } from 'rxjs/ajax'
-import { BehaviorSubject, Observable, of } from 'rxjs'
+import { BehaviorSubject, of } from 'rxjs'
 import {
 	filter,
 	switchMap,
@@ -17,7 +17,6 @@ import { route, pushState } from './route'
 const ROOT = 'https://api.jikan.moe/v3'
 
 export const isLoading = new BehaviorSubject(false)
-/** @type {BehaviorSubject<string[]>} */
 export const errors = new BehaviorSubject<string[]>([])
 
 const e = encodeURIComponent
