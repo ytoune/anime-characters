@@ -1,16 +1,28 @@
 {
-  "include": ["./src/**/*"],
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "lib": ["dom", "es2019"],
-    "jsx": "react",
-    "strict": true,
+    "lib": ["es2021", "dom", "dom.iterable"],
     "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "isolatedModules": true,
     "noEmit": true,
+    "strict": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noUncheckedIndexedAccess": true,
+    "useDefineForClassFields": true,
     "skipLibCheck": true,
-    "moduleResolution": "node"
-  }
+    "forceConsistentCasingInFileNames": true,
+    "stripInternal": true,
+    "moduleResolution": "node",
+    "baseUrl": "src",
+    "paths": {
+      "~/*": ["*"]
+    },
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react"
+  },
+  "include": ["src/**/*", "vite.config.mts"],
+  "exclude": ["node_modules", "dist"]
 }
